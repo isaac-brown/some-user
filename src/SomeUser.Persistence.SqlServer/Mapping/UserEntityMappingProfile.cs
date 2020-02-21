@@ -19,6 +19,7 @@ namespace SomeUser.Persistence.SqlServer.Mapping
       public UserEntityMappingProfile()
       {
          this.CreateMap<UserEntity, User>()
+             .ForMember(dest => dest.Title, opts => opts.MapFrom(src => Enumeration.FromKeyCode<UserTitle>(src.Title)))
              .ForMember(dest => dest.ProfileImages, opts => opts.MapFrom(src => src));
 
          this.CreateMap<UserEntity, ProfileImages>()
@@ -26,6 +27,7 @@ namespace SomeUser.Persistence.SqlServer.Mapping
              .ForMember(dest => dest.UrlLarge, opts => opts.MapFrom(src => src.ProfileImageLarge));
 
          this.CreateMap<User, UserEntity>()
+             .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title.KeyCode))
              .ForMember(dest => dest.ProfileImageSmall, opts => opts.MapFrom(src => src.ProfileImages.UrlSmall))
              .ForMember(dest => dest.ProfileImageLarge, opts => opts.MapFrom(src => src.ProfileImages.UrlLarge));
       }

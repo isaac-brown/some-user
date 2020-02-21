@@ -61,7 +61,7 @@ namespace SomeUser.IntegrationTests
                "'First Name' must not be empty.",
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
-               "'Title' must be one of Mr, Mrs, Dr",
+               "'Title' must be one of DR, MR, MRS, MS",
             });
       }
 
@@ -83,7 +83,8 @@ namespace SomeUser.IntegrationTests
 
          // Assert.
          httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-         createdUser.Should().BeEquivalentTo(createUserRequest);
+         createdUser.Should()
+                    .BeEquivalentTo(createUserRequest, opts => opts.Excluding(x => x.Id));
       }
    }
 }

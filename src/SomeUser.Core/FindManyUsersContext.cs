@@ -4,15 +4,29 @@
 
 namespace SomeUser.Core
 {
+   using System;
+
    /// <summary>
    /// Context for querying <see cref="IUserService.FindManyAsync(FindManyUsersContext)"/>.
    /// </summary>
    public class FindManyUsersContext
    {
+      private int limit = 100;
+
       /// <summary>
-      /// Gets or sets maximum number of records to retrieve. Default is 1000.
+      /// Gets or sets maximum number of records to retrieve. Default is 100.
       /// </summary>
-      public int Limit { get; set; } = 1000;
+      public int Limit
+      {
+         get => this.limit;
+         set
+         {
+            value = Math.Max(1, value);
+            value = Math.Min(value, 1000);
+
+            this.limit = value;
+         }
+      }
 
       /// <summary>
       /// Gets or sets the first name to filter results.

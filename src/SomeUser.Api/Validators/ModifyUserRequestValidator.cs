@@ -33,7 +33,9 @@ namespace SomeUser.Api.Validators
          this.RuleFor(x => x.DateOfBirth)
              .Must(BeAValidDate)
              .WithMessage("'{PropertyName}' must be a valid date (e.g. yyyy-MM-dd).");
-         this.RuleFor(x => x.Title).Must(BeValidTitle).WithMessage($"'{{PropertyName}}' must be one of {string.Join(", ", Enumeration.GetAll<UserTitle>().Select(x => x.KeyCode))}");
+         this.RuleFor(x => x.Title)
+             .Must(BeValidTitle)
+             .WithMessage($"'{{PropertyName}}' must be one of {string.Join(", ", Enumeration.GetAll<UserTitle>().Select(x => x.KeyCode))}");
       }
 
       private static bool BeValidTitle(string title)
@@ -56,6 +58,11 @@ namespace SomeUser.Api.Validators
 
       private static bool BeAValidDate(string value)
       {
+         if (value is null)
+         {
+            return true;
+         }
+
          return DateTime.TryParse(value, out DateTime date);
       }
    }

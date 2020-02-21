@@ -64,7 +64,11 @@ namespace SomeUser.IntegrationTests
          var client = this.factory.CreateClient();
          var userId = Guid.NewGuid();
 
-         var request = new ModifyUserRequest();
+         var request = new ModifyUserRequest
+         {
+            Title = "Invalid",
+            DateOfBirth = "Also invalid",
+         };
 
          // Act.
          var httpResponse = await client.PutAsync($"users/{userId}", request, this.jsonFormatter);
@@ -78,8 +82,8 @@ namespace SomeUser.IntegrationTests
                "'First Name' must not be empty.",
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
-               "'Title' must be one of Mr, Mrs, Dr",
-               "'Date Of Birth' must be valid date (e.g. yyyy-MM-dd).",
+               "'Title' must be one of DR, MR, MRS, MS",
+               "'Date Of Birth' must be a valid date (e.g. yyyy-MM-dd).",
             });
       }
 
@@ -107,6 +111,7 @@ namespace SomeUser.IntegrationTests
             FirstName = "Alice",
             LastName = "Hall",
             Email = "alice.hall@example.com",
+            Title = "Ms",
          };
 
          // Act.

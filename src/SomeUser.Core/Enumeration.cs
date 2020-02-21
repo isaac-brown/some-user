@@ -102,7 +102,7 @@ namespace SomeUser.Core
         throw new ArgumentNullException(nameof(keyCode));
       }
 
-      var matchingItem = Parse<string, T>(keyCode, nameof(keyCode), item => item.KeyCode == keyCode);
+      var matchingItem = Parse<string, T>(keyCode, nameof(keyCode), item => item.KeyCode == keyCode.ToUpperInvariant());
       return matchingItem;
     }
 
@@ -158,9 +158,9 @@ namespace SomeUser.Core
         throw new ArgumentNullException(nameof(other));
       }
 
-      if (other is Enumeration)
+      if (other is Enumeration enumeration)
       {
-        return this.KeyCode.CompareTo(((Enumeration)other).KeyCode);
+        return this.KeyCode.CompareTo(enumeration.KeyCode);
       }
 
       throw new ArgumentException(

@@ -14,7 +14,7 @@ namespace SomeUser.Core
       /// <summary>
       ///  Gets or sets the user's title.
       /// </summary>
-      public string Title { get; set; }
+      public UserTitle Title { get; set; }
 
       /// <summary>
       /// Gets or sets the user's unique identifier.

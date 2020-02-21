@@ -36,19 +36,18 @@ namespace SomeUser.Api.Controllers
       /// <summary>
       /// Retrieves many users.
       /// </summary>
-      /// <param name="limit">The maximum number of records to use.</param>
+      /// <param name="firstName">Used to filter user's on their first name.</param>
+      /// <param name="lastName">Used to filter user's on their last name.</param>
+      /// <param name="limit">The maximum number of records to use. Default is 100.</param>
       /// <returns>200 Ok with users in the body.</returns>
       [HttpGet]
-      public async Task<IActionResult> FindManyAsync(int limit = 1000)
+      public async Task<IActionResult> FindManyAsync(string firstName, string lastName, int? limit = 100)
       {
-         if (limit < 1)
-         {
-            return this.BadRequest(new { message = "limit must be greater than 0" });
-         }
-
          FindManyUsersContext findManyUsersContext = new FindManyUsersContext
          {
-            Limit = limit,
+            Limit = limit.Value,
+            FirstName = firstName,
+            LastName = lastName,
          };
 
          IEnumerable<User> users = await this.userService.FindManyAsync(findManyUsersContext);

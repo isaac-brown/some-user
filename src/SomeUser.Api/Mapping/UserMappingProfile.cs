@@ -20,10 +20,10 @@ namespace SomeUser.Api.Mapping
       public UserMappingProfile()
       {
          this.CreateMap<DateTime?, string>().ConvertUsing<NullableDateTimeConverter>();
-         this.CreateMap<User, FindUserResponse>()
-             .ForMember(dest => dest.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth.Value.ToString("yyyy-MM-dd")));
+         this.CreateMap<User, FindUserResponse>();
          this.CreateMap<User, CreateUserResponse>();
-         this.CreateMap<ModifyUserRequest, User>();
+         this.CreateMap<ModifyUserRequest, User>()
+             .ForMember(dest => dest.Title, opts => opts.MapFrom(src => Enumeration.FromKeyCode<UserTitle>(src.Title)));
 
          this.CreateMap<ProfileImagesDto, ProfileImages>()
              .ReverseMap();

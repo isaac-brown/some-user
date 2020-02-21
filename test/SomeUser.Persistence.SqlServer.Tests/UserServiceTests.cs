@@ -1,4 +1,4 @@
-// <copyright file="UserRepositoryTests.cs" company="Isaac Brown">
+// <copyright file="UserServiceTests.cs" company="Isaac Brown">
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
@@ -23,7 +23,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
    /// Unit tests for the <see cref="UserService"/> class.
    /// </summary>
    [Trait("Category", "Unit")]
-   public class UserRepositoryTests
+   public class UserServiceTests
    {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements must be documented
@@ -89,24 +89,26 @@ namespace SomeUser.Persistence.SqlServer.Tests
          users.Count().Should().Be(expectedCount);
       }
 
-      [Theory]
-      [InlineData(999, 999)]
-      [InlineData(1000, 1000)]
-      [InlineData(1001, 1000)]
-      public async Task Given_limit_is_not_specified_When_FindManyAsync_is_called_Then_result_should_contain_at_most_1000_users(int countUsers, int expectedCount)
+      [Fact]
+      public async Task Given_limit_is_greater_than_1000_When_FindManyAsync_is_called_Then_result_should_contain_at_most_1000_users()
       {
          // Arrange.
          IFixture fixture = AutoMoqFixture.Create();
          fixture.Inject<IMapper>(AutoMapperFixture.Mapper);
-         InjectDbContextWithUsers(fixture, countUsers);
+         InjectDbContextWithUsers(fixture, 1001);
 
          var sut = fixture.Create<UserService>();
 
+         FindManyUsersContext findManyUserContext = new FindManyUsersContext
+         {
+            Limit = 1001,
+         };
+
          // Act.
-         var users = await sut.FindManyAsync();
+         var users = await sut.FindManyAsync(findManyUserContext);
 
          // Assert.
-         users.Count().Should().Be(expectedCount);
+         users.Count().Should().Be(1000);
       }
 
       [Fact]
@@ -229,7 +231,6 @@ namespace SomeUser.Persistence.SqlServer.Tests
          foundUser.Should().BeEquivalentTo(user);
       }
 
-      // TODO: UpdateOneAsync
       private static void InjectEmptyDbContext(IFixture fixture)
       {
          var options = new DbContextOptionsBuilder<SomeUserDbContext>()
@@ -248,6 +249,8 @@ namespace SomeUser.Persistence.SqlServer.Tests
              .Options;
 
          var userEntities = fixture.CreateMany<UserEntity>(countUsers);
+
+         userEntities.ForEach(u => u.Title = null);
 
          using (var ctx = new SomeUserDbContext(options))
          {
