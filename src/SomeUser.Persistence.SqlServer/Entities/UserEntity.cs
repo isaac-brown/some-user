@@ -11,6 +11,8 @@ namespace SomeUser.Persistence.SqlServer.Entities
    /// </summary>
    public class UserEntity
    {
+
+
       /// <summary>
       /// Gets or sets the user's unique identifier.
       /// </summary>
@@ -30,5 +32,13 @@ namespace SomeUser.Persistence.SqlServer.Entities
       /// Gets or sets the email address for the user.
       /// </summary>
       public string Email { get; set; }
+
+      public string PhoneNumber { get; set; }
+
+      public string DateOfBirth { get; set; }
+
+      public string ProfileImageSmall { get; set; }
+
+      public string ProfileImageLarge { get; set; }
    }
 }

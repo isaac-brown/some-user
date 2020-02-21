@@ -20,7 +20,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
    using Xunit;
 
    /// <summary>
-   /// Unit tests for the <see cref="UserRepository"/> class.
+   /// Unit tests for the <see cref="UserService"/> class.
    /// </summary>
    [Trait("Category", "Unit")]
    public class UserRepositoryTests
@@ -38,7 +38,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
 
          var user = fixture.Create<User>();
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          await sut.CreateOneAsync(user);
@@ -59,7 +59,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
 
          Guid userId = fixture.Create<Guid>();
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          var userExists = await sut.ExistsAsync(userId);
@@ -80,7 +80,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
          InjectDbContextWithUsers(fixture, countUsers);
          FindManyUsersContext findManyUsersContext = new FindManyUsersContext { Limit = limit };
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          var users = await sut.FindManyAsync(findManyUsersContext);
@@ -100,7 +100,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
          fixture.Inject<IMapper>(AutoMapperFixture.Mapper);
          InjectDbContextWithUsers(fixture, countUsers);
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          var users = await sut.FindManyAsync();
@@ -120,7 +120,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
          var expectedFirstName = userEntity.FirstName;
          FindManyUsersContext findManyUsersContext = new FindManyUsersContext { FirstName = expectedFirstName };
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          var users = await sut.FindManyAsync(findManyUsersContext);
@@ -140,7 +140,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
          string expectedLastName = userEntity.LastName;
          FindManyUsersContext findManyUsersContext = new FindManyUsersContext { LastName = expectedLastName };
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          var users = await sut.FindManyAsync(findManyUsersContext);
@@ -159,7 +159,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
 
          Guid userId = fixture.Create<Guid>();
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          var userDeleted = await sut.DeleteOneAsync(userId);
@@ -178,7 +178,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
 
          Guid userId = entities.First().Id;
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          bool userDeleted = await sut.DeleteOneAsync(userId);
@@ -199,7 +199,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
 
          var user = fixture.Create<User>();
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          await sut.CreateOneAsync(user);
@@ -219,7 +219,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
 
          var user = fixture.Create<User>();
 
-         var sut = fixture.Create<UserRepository>();
+         var sut = fixture.Create<UserService>();
 
          // Act.
          await sut.CreateOneAsync(user);

@@ -1,4 +1,4 @@
-// <copyright file="IUserRepository.cs" company="Isaac Brown">
+// <copyright file="IUserService.cs" company="Isaac Brown">
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
@@ -9,9 +9,9 @@ namespace SomeUser.Core
    using System.Threading.Tasks;
 
    /// <summary>
-   /// Repository for working with <see cref="User"/> objects.
+   /// Service for working with <see cref="User"/> objects.
    /// </summary>
-   public interface IUserRepository
+   public interface IUserService
    {
       /// <summary>
       /// Retrieves a list of <see cref="User"/> objects which match the given <see cref="FindManyUsersContext"/>.

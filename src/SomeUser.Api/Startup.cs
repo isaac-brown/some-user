@@ -45,8 +45,8 @@ namespace SomeUser.Api
          services.AddMvc()
                  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
          services.AddAutoMapper(typeof(Startup).Assembly, typeof(UserEntityMappingProfile).Assembly);
-         services.AddScoped<IUserRepository, UserRepository>();
-         services.AddSomeUserSqlServerInMemory();
+         services.AddScoped<IUserService, UserService>();
+         services.AddSomeUserSqlServer(this.Configuration);
       }
 
       /// <summary>
@@ -54,8 +54,12 @@ namespace SomeUser.Api
       /// </summary>
       /// <param name="app">The application builder instance to configure.</param>
       /// <param name="env">The host environment.</param>
-      public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+      /// <param name="dbContext">The database context to confiugre.</param>
+      public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SomeUserDbContext dbContext)
       {
+         // migrate any database changes on startup (includes initial db creation)
+         dbContext.Database.Migrate();
+
          if (env.IsDevelopment())
          {
             app.UseDeveloperExceptionPage();

@@ -12,6 +12,11 @@ namespace SomeUser.Core
    public class User
    {
       /// <summary>
+      ///  Gets or sets the user's title.
+      /// </summary>
+      public string Title { get; set; }
+
+      /// <summary>
       /// Gets or sets the user's unique identifier.
       /// </summary>
       public Guid Id { get; set; }
@@ -30,5 +35,17 @@ namespace SomeUser.Core
       /// Gets or sets the email address for the user.
       /// </summary>
       public string Email { get; set; }
+
+      /// <summary>
+      /// Gets or sets the user's phone number.
+      /// </summary>
+      public string PhoneNumber { get; set; }
+
+      /// <summary>
+      /// Gets or sets the user's date of birth.
+      /// </summary>
+      public DateTime DateOfBirth { get; set; }
+
+      public ProfileImages ProfileImages { get; set; }
    }
 }

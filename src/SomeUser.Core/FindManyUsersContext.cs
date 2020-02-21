@@ -5,7 +5,7 @@
 namespace SomeUser.Core
 {
    /// <summary>
-   /// Context for querying <see cref="IUserRepository.FindManyAsync(FindManyUsersContext)"/>.
+   /// Context for querying <see cref="IUserService.FindManyAsync(FindManyUsersContext)"/>.
    /// </summary>
    public class FindManyUsersContext
    {

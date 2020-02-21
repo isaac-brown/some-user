@@ -19,7 +19,15 @@ namespace SomeUser.Persistence.SqlServer.Mapping
       public UserEntityMappingProfile()
       {
          this.CreateMap<UserEntity, User>()
-            .ReverseMap();
+             .ForMember(dest => dest.ProfileImages, opts => opts.MapFrom(src => src));
+
+         this.CreateMap<UserEntity, ProfileImages>()
+             .ForMember(dest => dest.UrlSmall, opts => opts.MapFrom(src => src.ProfileImageSmall))
+             .ForMember(dest => dest.UrlLarge, opts => opts.MapFrom(src => src.ProfileImageLarge));
+
+         this.CreateMap<User, UserEntity>()
+             .ForMember(dest => dest.ProfileImageSmall, opts => opts.MapFrom(src => src.ProfileImages.UrlSmall))
+             .ForMember(dest => dest.ProfileImageLarge, opts => opts.MapFrom(src => src.ProfileImages.UrlLarge));
       }
    }
 }

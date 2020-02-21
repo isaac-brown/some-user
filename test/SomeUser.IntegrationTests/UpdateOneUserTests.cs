@@ -43,7 +43,7 @@ namespace SomeUser.IntegrationTests
          var client = this.factory.CreateClient();
          var userId = Guid.NewGuid();
 
-         var userToUpdate = new UpdateUserRequest
+         var userToUpdate = new ModifyUserRequest
          {
             FirstName = "Alice",
             LastName = "Hall",
@@ -64,7 +64,7 @@ namespace SomeUser.IntegrationTests
          var client = this.factory.CreateClient();
          var userId = Guid.NewGuid();
 
-         var request = new UpdateUserRequest();
+         var request = new ModifyUserRequest();
 
          // Act.
          var httpResponse = await client.PutAsync($"users/{userId}", request, this.jsonFormatter);
@@ -78,6 +78,8 @@ namespace SomeUser.IntegrationTests
                "'First Name' must not be empty.",
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
+               "'Title' must be one of Mr, Mrs, Dr",
+               "'Date Of Birth' must be valid date.",
             });
       }
 
@@ -87,11 +89,12 @@ namespace SomeUser.IntegrationTests
          // Arrange.
          var client = this.factory.CreateClient();
 
-         var createUserRequest = new CreateUserRequest
+         var createUserRequest = new ModifyUserRequest
          {
             FirstName = "Alice",
             LastName = "Hall",
             Email = "alice.hall@example.com",
+            DateOfBirth = "2000-01-01",
          };
 
          var createUserResponse = await client.PostAsync("users", createUserRequest, this.jsonFormatter);
@@ -99,7 +102,7 @@ namespace SomeUser.IntegrationTests
 
          var userId = user.Id;
 
-         var updatedUser = new UpdateUserRequest
+         var updatedUser = new ModifyUserRequest
          {
             FirstName = "Alice",
             LastName = "Hall",

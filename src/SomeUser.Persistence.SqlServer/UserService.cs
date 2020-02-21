@@ -1,4 +1,4 @@
-// <copyright file="UserRepository.cs" company="Isaac Brown">
+// <copyright file="UserService.cs" company="Isaac Brown">
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
@@ -14,19 +14,19 @@ namespace SomeUser.Persistence.SqlServer
    using SomeUser.Persistence.SqlServer.Entities;
 
    /// <summary>
-   /// SQL Server implementation of <see cref="IUserRepository"/>.
+   /// SQL Server implementation of <see cref="IUserService"/>.
    /// </summary>
-   public class UserRepository : IUserRepository
+   public class UserService : IUserService
    {
       private readonly SomeUserDbContext context;
       private readonly IMapper mapper;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="UserRepository"/> class.
+      /// Initializes a new instance of the <see cref="UserService"/> class.
       /// </summary>
       /// <param name="context">The db context to use.</param>
       /// <param name="mapper">The mapper to use.</param>
-      public UserRepository(SomeUserDbContext context, IMapper mapper)
+      public UserService(SomeUserDbContext context, IMapper mapper)
       {
          this.context = context;
          this.mapper = mapper;

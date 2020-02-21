@@ -54,11 +54,12 @@ namespace SomeUser.IntegrationTests
          // Arrange.
          var client = this.factory.CreateClient();
 
-         CreateUserRequest createUserRequest = new CreateUserRequest
+         ModifyUserRequest createUserRequest = new ModifyUserRequest
          {
             FirstName = "Alice",
             LastName = "Hall",
             Email = "alice.hall@example.com",
+            DateOfBirth = "2000-01-01",
          };
 
          var createUserHttpResponse = await client.PostAsync("/users", createUserRequest, this.jsonFormatter);

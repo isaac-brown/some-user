@@ -10,10 +10,11 @@ namespace SomeUser.IntegrationTests
    using System.Net.Mime;
    using System.Text;
    using System.Threading.Tasks;
+   using AutoFixture;
    using FluentAssertions;
    using Microsoft.AspNetCore.Mvc.Testing;
-   using Newtonsoft.Json;
    using SomeUser.Api.Models;
+   using SomeUser.IntegrationTests.Fixtures;
    using Xunit;
 
    /// <summary>
@@ -39,11 +40,17 @@ namespace SomeUser.IntegrationTests
       public async Task Given_an_empty_request_body_When_CreateUser_is_called_Then_a_response_with_status_400_Bad_Request_should_be_returned()
       {
          // Arrange.
+         IFixture fixture = AutoMoqFixture.Create();
+         ModifyUserRequest userToCreate = fixture.Create<ModifyUserRequest>();
+         userToCreate.FirstName = null;
+         userToCreate.LastName = null;
+         userToCreate.Email = null;
+         userToCreate.Title = "Invalid";
+
          var client = this.factory.CreateClient();
-         using HttpContent body = new StringContent("{}", Encoding.UTF8, MediaTypeNames.Application.Json);
 
          // Act.
-         var response = await client.PostAsync("users", body);
+         var response = await client.PostAsync("users", userToCreate, this.jsonFormatter);
          var responseBody = await response.Content.ReadAsStringAsync();
 
          // Assert.
@@ -54,6 +61,7 @@ namespace SomeUser.IntegrationTests
                "'First Name' must not be empty.",
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
+               "'Title' must be one of Mr, Mrs, Dr",
             });
       }
 
@@ -61,21 +69,21 @@ namespace SomeUser.IntegrationTests
       public async Task Given_a_valid_request_body_When_CreateUser_is_called_Then_a_response_with_status_201_Created_should_be_returned()
       {
          // Arrange.
+         IFixture fixture = AutoMoqFixture.Create();
+         ModifyUserRequest createUserRequest = fixture.Create<ModifyUserRequest>();
+         createUserRequest.Title = null;
+         createUserRequest.Email = "valid@example.com";
+         createUserRequest.DateOfBirth = "2020-01-01";
+
          var client = this.factory.CreateClient();
-         CreateUserRequest userToCreate = new CreateUserRequest
-         {
-            FirstName = "Alice",
-            LastName = "Hall",
-            Email = "alice.hall@example.com",
-         };
 
          // Act.
-         var httpResponse = await client.PostAsync("users", userToCreate, this.jsonFormatter);
+         var httpResponse = await client.PostAsync("users", createUserRequest, this.jsonFormatter);
          var createdUser = await httpResponse.Content.ReadAsAsync<CreateUserResponse>();
 
          // Assert.
          httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-         createdUser.Should().BeEquivalentTo(userToCreate);
+         createdUser.Should().BeEquivalentTo(createUserRequest);
       }
    }
 }

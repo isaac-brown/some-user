@@ -34,6 +34,17 @@ namespace SomeUser.Persistence.SqlServer
       /// </summary>
       public DbSet<UserEntity> Users { get; set; }
 
+      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+      {
+         base.OnConfiguring(optionsBuilder);
+         if (optionsBuilder.IsConfigured)
+         {
+            return;
+         }
+
+         optionsBuilder.UseSqlServer("Server=localhost;User=sa;Password=Welcome12;Database=SomeUser");
+      }
+
       /// <inheritdoc/>
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -53,25 +64,6 @@ namespace SomeUser.Persistence.SqlServer
          modelBuilder.Entity<UserEntity>()
                      .Property(u => u.Email)
                      .IsRequired();
-
-         modelBuilder.Entity<UserEntity>()
-                     .HasData(new[]
-                     {
-                        new UserEntity
-                        {
-                           Id = Guid.NewGuid(),
-                           FirstName = "Alice",
-                           LastName = "Hall",
-                           Email = "alice.hall@example.com",
-                        },
-                        new UserEntity
-                        {
-                           Id = Guid.NewGuid(),
-                           FirstName = "Bob",
-                           LastName = "Carpenter",
-                           Email = "bob.carpenter@example.com",
-                        },
-                     });
       }
    }
 }

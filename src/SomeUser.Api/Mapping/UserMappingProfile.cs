@@ -19,11 +19,14 @@ namespace SomeUser.Api.Mapping
       /// </summary>
       public UserMappingProfile()
       {
-         this.CreateMap<User, FindUserResponse>();
-         this.CreateMap<User, CreateUserResponse>();
-         this.CreateMap<CreateUserRequest, User>()
-             .ForMember(dest => dest.Id, opts => opts.MapFrom(src => Guid.NewGuid()));
-         this.CreateMap<UpdateUserRequest, User>();
+         this.CreateMap<User, FindUserResponse>()
+             .ForMember(dest => dest.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth.ToString("yyyy-MM-dd")));
+         this.CreateMap<User, CreateUserResponse>()
+             .ForMember(dest => dest.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth.ToString("yyyy-MM-dd")));
+         this.CreateMap<ModifyUserRequest, User>();
+
+         this.CreateMap<ProfileImagesDto, ProfileImages>()
+             .ReverseMap();
       }
    }
 }

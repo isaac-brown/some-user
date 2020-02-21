@@ -6,6 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
    using System;
    using Microsoft.EntityFrameworkCore;
+   using Microsoft.Extensions.Configuration;
    using SomeUser.Persistence.SqlServer;
 
    /// <summary>
@@ -14,18 +15,24 @@ namespace Microsoft.Extensions.DependencyInjection
    public static class ServiceCollectionExtensions
    {
       /// <summary>
-      /// Adds Sql Server persistence to the given service collection with the given options.
+      /// Adds Sql Server persistence to the given service collection with the given configuration.
       /// </summary>
       /// <param name="services">The service collection to register services with.</param>
-      /// <param name="options">Options for the Db context.</param>
+      /// <param name="configuration">Configuration to get the connection string from.</param>
       /// <returns>The service collection with services configured.</returns>
-      public static IServiceCollection AddSomeUserSqlServer(this IServiceCollection services, Action<DbContextOptionsBuilder> options = null)
+      public static IServiceCollection AddSomeUserSqlServer(this IServiceCollection services, IConfiguration configuration)
       {
-         services.AddDbContext<SomeUserDbContext>(options);
+         string connectionString = configuration.GetConnectionString("SomeUser");
+         services.AddDbContext<SomeUserDbContext>((builder) => builder.UseSqlServer(connectionString));
 
          return services;
       }
 
+      /// <summary>
+      /// Adds in memory persistence to the given service collection.
+      /// </summary>
+      /// <param name="services">The service collection to register services with.</param>
+      /// <returns>The service collection with in memory services configured.</returns>
       public static IServiceCollection AddSomeUserSqlServerInMemory(this IServiceCollection services)
       {
          var options = new DbContextOptionsBuilder<SomeUserDbContext>()

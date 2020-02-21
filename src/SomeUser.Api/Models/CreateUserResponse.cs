@@ -15,10 +15,18 @@ namespace SomeUser.Api.Models
 #pragma warning disable SA1600 // Elements must be documented
       public Guid Id { get; set; }
 
+      public string Title { get; set; }
+
       public string FirstName { get; set; }
 
       public string LastName { get; set; }
 
       public string Email { get; set; }
+
+      public string PhoneNumber { get; set; }
+
+      public string DateOfBirth { get; set; }
+
+      public ProfileImagesDto ProfileImages { get; set; }
    }
 }
