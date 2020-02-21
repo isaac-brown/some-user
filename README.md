@@ -18,7 +18,7 @@ git clone https://github.com/isaac-brown/some-user.git
 Start a SQL Server instance using docker.
 
 ```bash
-docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Welcome12' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest
 ```
 
 > If you don't have docker, then you'll need access to another SQL Server instance, and will have to configure the `"ConnectionStrings:SomeUser"` property of `appsettings.json` in the `SomeUser.Api` project as follows:
