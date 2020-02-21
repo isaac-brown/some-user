@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SomeUser.Persistence.SqlServer;
 
 namespace SomeUser.Persistence.SqlServer.Migrations
 {
     [DbContext(typeof(SomeUserDbContext))]
-    partial class SomeUserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200221215148_Add User.Title")]
+    partial class AddUserTitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
