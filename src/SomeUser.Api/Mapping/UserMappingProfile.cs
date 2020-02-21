@@ -6,7 +6,7 @@ namespace SomeUser.Api.Mapping
 {
    using System;
    using AutoMapper;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
    using SomeUser.Core;
 
    /// <summary>
@@ -19,10 +19,10 @@ namespace SomeUser.Api.Mapping
       /// </summary>
       public UserMappingProfile()
       {
+         this.CreateMap<DateTime?, string>().ConvertUsing<NullableDateTimeConverter>();
          this.CreateMap<User, FindUserResponse>()
-             .ForMember(dest => dest.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth.ToString("yyyy-MM-dd")));
-         this.CreateMap<User, CreateUserResponse>()
-             .ForMember(dest => dest.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth.ToString("yyyy-MM-dd")));
+             .ForMember(dest => dest.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth.Value.ToString("yyyy-MM-dd")));
+         this.CreateMap<User, CreateUserResponse>();
          this.CreateMap<ModifyUserRequest, User>();
 
          this.CreateMap<ProfileImagesDto, ProfileImages>()

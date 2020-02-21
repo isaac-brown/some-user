@@ -9,8 +9,14 @@ namespace SomeUser.Core
    /// </summary>
    public class ProfileImages
    {
+      /// <summary>
+      /// Gets or sets the url to the small version of the user's profile image.
+      /// </summary>
       public string UrlSmall { get; set; }
 
+      /// <summary>
+      /// Gets or sets the url to the large version of the user's profile image.
+      /// </summary>
       public string UrlLarge { get; set; }
    }
 }

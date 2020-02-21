@@ -13,7 +13,7 @@ namespace SomeUser.IntegrationTests
    using AutoFixture;
    using FluentAssertions;
    using Microsoft.AspNetCore.Mvc.Testing;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
    using SomeUser.IntegrationTests.Fixtures;
    using Xunit;
 

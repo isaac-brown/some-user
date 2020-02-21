@@ -15,7 +15,7 @@ namespace SomeUser.IntegrationTests
    using FluentAssertions;
    using Microsoft.AspNetCore.Mvc.Testing;
    using Newtonsoft.Json;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
    using Xunit;
 
    /// <summary>
@@ -79,7 +79,7 @@ namespace SomeUser.IntegrationTests
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
                "'Title' must be one of Mr, Mrs, Dr",
-               "'Date Of Birth' must be valid date.",
+               "'Date Of Birth' must be valid date (e.g. yyyy-MM-dd).",
             });
       }
 

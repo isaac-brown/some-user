@@ -1,4 +1,4 @@
-// <copyright file="CreateUserRequestValidator.cs" company="Isaac Brown">
+// <copyright file="ModifyUserRequestValidator.cs" company="Isaac Brown">
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
@@ -7,7 +7,8 @@ namespace SomeUser.Api.Validators
    using System;
    using System.Linq;
    using FluentValidation;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
+   using SomeUser.Core;
 
    /// <summary>
    /// Validator for <see cref="ModifyUserRequest"/> objects.
@@ -31,8 +32,8 @@ namespace SomeUser.Api.Validators
          this.RuleFor(x => x.Email).NotEmpty().EmailAddress();
          this.RuleFor(x => x.DateOfBirth)
              .Must(BeAValidDate)
-             .WithMessage("'{PropertyName} must be a valid date (e.g. yyyy-MM-dd).");
-         this.RuleFor(x => x.Title).Must(BeValidTitle).WithMessage($"'{{PropertyName}}' must be one of {string.Join(", ", TitleOptions)}");
+             .WithMessage("'{PropertyName}' must be a valid date (e.g. yyyy-MM-dd).");
+         this.RuleFor(x => x.Title).Must(BeValidTitle).WithMessage($"'{{PropertyName}}' must be one of {string.Join(", ", Enumeration.GetAll<UserTitle>().Select(x => x.KeyCode))}");
       }
 
       private static bool BeValidTitle(string title)
@@ -42,7 +43,15 @@ namespace SomeUser.Api.Validators
             return true;
          }
 
-         return TitleOptions.Any(o => o.Equals(title, StringComparison.InvariantCultureIgnoreCase));
+         try
+         {
+            _ = Enumeration.FromKeyCode<UserTitle>(title);
+            return true;
+         }
+         catch (ApplicationException)
+         {
+            return false;
+         }
       }
 
       private static bool BeAValidDate(string value)

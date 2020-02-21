@@ -5,15 +5,13 @@
 namespace SomeUser.IntegrationTests
 {
    using System;
-   using System.Linq;
    using System.Net;
    using System.Net.Http;
    using System.Net.Http.Formatting;
    using System.Threading.Tasks;
    using FluentAssertions;
    using Microsoft.AspNetCore.Mvc.Testing;
-   using Newtonsoft.Json;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
    using Xunit;
 
    /// <summary>

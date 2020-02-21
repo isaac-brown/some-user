@@ -44,8 +44,11 @@ namespace SomeUser.Core
       /// <summary>
       /// Gets or sets the user's date of birth.
       /// </summary>
-      public DateTime DateOfBirth { get; set; }
+      public DateTime? DateOfBirth { get; set; }
 
+      /// <summary>
+      /// Gets or sets the user's profile images.
+      /// </summary>
       public ProfileImages ProfileImages { get; set; }
    }
 }

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace SomeUser.Api.Models
+namespace SomeUser.Api.Dtos
 {
    /// <summary>
    /// Represents a user's profile images.

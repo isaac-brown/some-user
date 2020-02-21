@@ -11,7 +11,7 @@ namespace SomeUser.IntegrationTests
    using FluentAssertions;
    using Microsoft.AspNetCore.Mvc.Testing;
    using Newtonsoft.Json;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
    using Xunit;
 
    /// <summary>

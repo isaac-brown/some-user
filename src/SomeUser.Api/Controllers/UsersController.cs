@@ -9,7 +9,7 @@ namespace SomeUser.Api.Controllers
    using System.Threading.Tasks;
    using AutoMapper;
    using Microsoft.AspNetCore.Mvc;
-   using SomeUser.Api.Models;
+   using SomeUser.Api.Dtos;
    using SomeUser.Core;
 
    /// <summary>
