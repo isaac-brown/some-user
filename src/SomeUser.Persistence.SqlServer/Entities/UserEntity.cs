@@ -11,8 +11,6 @@ namespace SomeUser.Persistence.SqlServer.Entities
    /// </summary>
    public class UserEntity
    {
-
-
       /// <summary>
       /// Gets or sets the user's unique identifier.
       /// </summary>
@@ -35,7 +33,7 @@ namespace SomeUser.Persistence.SqlServer.Entities
 
       public string PhoneNumber { get; set; }
 
-      public string DateOfBirth { get; set; }
+      public DateTime? DateOfBirth { get; set; }
 
       public string ProfileImageSmall { get; set; }
 

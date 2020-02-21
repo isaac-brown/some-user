@@ -4,7 +4,6 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-   using System;
    using Microsoft.EntityFrameworkCore;
    using Microsoft.Extensions.Configuration;
    using SomeUser.Persistence.SqlServer;

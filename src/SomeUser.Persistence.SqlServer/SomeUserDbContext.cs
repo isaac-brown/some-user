@@ -34,6 +34,7 @@ namespace SomeUser.Persistence.SqlServer
       /// </summary>
       public DbSet<UserEntity> Users { get; set; }
 
+      /// <inheritdoc/>
       protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
       {
          base.OnConfiguring(optionsBuilder);
