@@ -1,7 +1,10 @@
+// <copyright file="UserRepositoryTests.cs" company="Isaac Brown">
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+
 namespace SomeUser.Persistence.SqlServer.Tests
 {
    using System;
-   using System.Collections;
    using System.Collections.Generic;
    using System.Linq;
    using System.Threading.Tasks;
@@ -22,6 +25,9 @@ namespace SomeUser.Persistence.SqlServer.Tests
    [Trait("Category", "Unit")]
    public class UserRepositoryTests
    {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements must be documented
+
       [Fact]
       public async Task Given_an_id_of_a_user_which_exists_When_ExistsAsync_is_called_Then_true_should_be_returned()
       {
@@ -66,7 +72,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
       [InlineData(1, 1, 1)]
       [InlineData(1, 0, 0)]
       [InlineData(1, 2, 1)]
-      public async Task Given_limit_is_positive_exists_When_FindManyAsync_is_called_Then_result_should_contain_at_most_the_limit_specified(int limit, int countUsers, int expectedCount)
+      public async Task Given_limit_is_positive_When_FindManyAsync_is_called_Then_result_should_contain_at_most_the_limit_specified(int limit, int countUsers, int expectedCount)
       {
          // Arrange.
          IFixture fixture = AutoMoqFixture.Create();
@@ -223,6 +229,7 @@ namespace SomeUser.Persistence.SqlServer.Tests
          foundUser.Should().BeEquivalentTo(user);
       }
 
+      // TODO: UpdateOneAsync
       private static void InjectEmptyDbContext(IFixture fixture)
       {
          var options = new DbContextOptionsBuilder<SomeUserDbContext>()

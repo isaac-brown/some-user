@@ -4,10 +4,15 @@
 
 namespace SomeUser.Api.Mapping
 {
+   using System;
+   using AutoMapper;
    using SomeUser.Api.Models;
    using SomeUser.Core;
 
-   public class UserMappingProfile : AutoMapper.Profile
+   /// <summary>
+   /// AutoMapper profile for mapping to and from <see cref="User"/> objects.
+   /// </summary>
+   public class UserMappingProfile : Profile
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="UserMappingProfile"/> class.
@@ -15,6 +20,10 @@ namespace SomeUser.Api.Mapping
       public UserMappingProfile()
       {
          this.CreateMap<User, FindUserResponse>();
+         this.CreateMap<User, CreateUserResponse>();
+         this.CreateMap<CreateUserRequest, User>()
+             .ForMember(dest => dest.Id, opts => opts.MapFrom(src => Guid.NewGuid()));
+         this.CreateMap<UpdateUserRequest, User>();
       }
    }
 }

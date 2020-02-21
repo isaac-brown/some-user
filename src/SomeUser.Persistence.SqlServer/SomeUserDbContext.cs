@@ -4,6 +4,7 @@
 
 namespace SomeUser.Persistence.SqlServer
 {
+   using System;
    using Microsoft.EntityFrameworkCore;
    using SomeUser.Persistence.SqlServer.Entities;
 
@@ -33,10 +34,44 @@ namespace SomeUser.Persistence.SqlServer
       /// </summary>
       public DbSet<UserEntity> Users { get; set; }
 
+      /// <inheritdoc/>
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
-         modelBuilder.Entity<UserEntity>().ToTable("User")
-            .HasKey(u => u.Id);
+         modelBuilder.Entity<UserEntity>()
+                     .ToTable("User")
+                     .HasKey(u => u.Id)
+                     .IsClustered(false);
+
+         modelBuilder.Entity<UserEntity>()
+                     .Property(u => u.FirstName)
+                     .IsRequired();
+
+         modelBuilder.Entity<UserEntity>()
+                     .Property(u => u.LastName)
+                     .IsRequired();
+
+         modelBuilder.Entity<UserEntity>()
+                     .Property(u => u.Email)
+                     .IsRequired();
+
+         modelBuilder.Entity<UserEntity>()
+                     .HasData(new[]
+                     {
+                        new UserEntity
+                        {
+                           Id = Guid.NewGuid(),
+                           FirstName = "Alice",
+                           LastName = "Hall",
+                           Email = "alice.hall@example.com",
+                        },
+                        new UserEntity
+                        {
+                           Id = Guid.NewGuid(),
+                           FirstName = "Bob",
+                           LastName = "Carpenter",
+                           Email = "bob.carpenter@example.com",
+                        },
+                     });
       }
    }
 }

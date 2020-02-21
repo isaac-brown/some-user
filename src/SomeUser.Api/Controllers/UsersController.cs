@@ -1,17 +1,20 @@
-using System.Collections.Generic;
-using System;
 // <copyright file="UsersController.cs" company="Isaac Brown">
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
 namespace SomeUser.Api.Controllers
 {
+   using System;
+   using System.Collections.Generic;
    using System.Threading.Tasks;
    using AutoMapper;
    using Microsoft.AspNetCore.Mvc;
    using SomeUser.Api.Models;
    using SomeUser.Core;
 
+   /// <summary>
+   /// Provides HTTP operations for working with <see cref="User"/> objects.
+   /// </summary>
    [ApiController]
    [Route("users")]
    public class UsersController : ControllerBase
@@ -19,50 +22,85 @@ namespace SomeUser.Api.Controllers
       private readonly IUserRepository userRepository;
       private readonly IMapper mapper;
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="UsersController"/> class.
+      /// </summary>
+      /// <param name="userRepository">The repository of users.</param>
+      /// <param name="mapper">The mapper to be used.</param>
       public UsersController(IUserRepository userRepository, IMapper mapper)
       {
          this.userRepository = userRepository;
          this.mapper = mapper;
       }
 
+      /// <summary>
+      /// Retrieves many users.
+      /// </summary>
+      /// <param name="limit">The maximum number of records to use.</param>
+      /// <returns>200 Ok with users in the body.</returns>
       [HttpGet]
-      public async Task<IActionResult> FindManyAsync(int? limit)
+      public async Task<IActionResult> FindManyAsync(int limit = 1000)
       {
-         if (limit.HasValue && limit < 1)
+         if (limit < 1)
          {
             return this.BadRequest(new { message = "limit must be greater than 0" });
          }
 
-         IEnumerable<User> users = await this.userRepository.FindManyAsync();
+         FindManyUsersContext findManyUsersContext = new FindManyUsersContext
+         {
+            Limit = limit,
+         };
+
+         IEnumerable<User> users = await this.userRepository.FindManyAsync(findManyUsersContext);
          var response = this.mapper.Map<IEnumerable<FindUserResponse>>(users);
 
          return this.Ok(response);
       }
 
+      /// <summary>
+      /// Creates a new user.
+      /// </summary>
+      /// <param name="createUserRequest">The user to create.</param>
+      /// <returns>201 Created if the user was created.</returns>
       [HttpPost]
-      public Task<IActionResult> CreateOneAsync(CreateUserRequest user)
+      public async Task<IActionResult> CreateOneAsync(CreateUserRequest createUserRequest)
       {
-         CreateUserResponse createdUser = new CreateUserResponse
-         {
-            Id = Guid.NewGuid(),
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-         };
-         return Task.FromResult<IActionResult>(this.CreatedAtRoute(string.Empty, string.Empty, createdUser));
+         var user = this.mapper.Map<User>(createUserRequest);
+
+         await this.userRepository.CreateOneAsync(user);
+
+         var createUserResponse = this.mapper.Map<CreateUserResponse>(user);
+
+         return this.CreatedAtRoute(string.Empty, string.Empty, createUserResponse);
       }
 
+      /// <summary>
+      /// Updates a single user with the given id.
+      /// </summary>
+      /// <param name="updateRequest">The updated reference of the user.</param>
+      /// <param name="userId">The id of the user to be updated.</param>
+      /// <returns>204 No Content if the user was updated.</returns>
       [HttpPut("{userId:guid}")]
-      public async Task<IActionResult> UpdateOneAsync(UpdateUserRequest user, Guid userId)
+      public async Task<IActionResult> UpdateOneAsync(UpdateUserRequest updateRequest, Guid userId)
       {
          if (!await this.userRepository.ExistsAsync(userId))
          {
             return this.NotFound();
          }
 
+         updateRequest.Id = userId;
+         User user = await this.userRepository.FindOneAsync(userId);
+         user = this.mapper.Map(updateRequest, user);
+         await this.userRepository.UpdateOneAsync(user);
+
          return this.NoContent();
       }
 
+      /// <summary>
+      /// Retrieves a single user with the given id.
+      /// </summary>
+      /// <param name="userId">The id of the user to be retrieved.</param>
+      /// <returns>200 Ok if the user is found.</returns>
       [HttpGet("{userId:guid}")]
       public async Task<IActionResult> FindOneAsync(Guid userId)
       {
@@ -71,9 +109,17 @@ namespace SomeUser.Api.Controllers
             return this.NotFound();
          }
 
-         return this.Ok();
+         User user = await this.userRepository.FindOneAsync(userId);
+         var response = this.mapper.Map<FindUserResponse>(user);
+
+         return this.Ok(response);
       }
 
+      /// <summary>
+      /// Deletes a single user with the given id.
+      /// </summary>
+      /// <param name="userId">The id of the user to be deleted.</param>
+      /// <returns>204 No Content if the user was deleted.</returns>
       [HttpDelete("{userId:guid}")]
       public async Task<IActionResult> DeleteOneAsync(Guid userId)
       {

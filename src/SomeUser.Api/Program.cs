@@ -7,14 +7,21 @@ namespace SomeUser.Api
    using Microsoft.AspNetCore.Hosting;
    using Microsoft.Extensions.Hosting;
 
+   /// <summary>
+   /// Application entry point.
+   /// </summary>
    public class Program
    {
+      /// <summary>
+      /// Starts the application with the given <paramref name="args"/>.
+      /// </summary>
+      /// <param name="args">Arguments to configure the behaviour of the application.</param>
       public static void Main(string[] args)
       {
          CreateHostBuilder(args).Build().Run();
       }
 
-      public static IHostBuilder CreateHostBuilder(string[] args) =>
+      private static IHostBuilder CreateHostBuilder(string[] args) =>
           Host.CreateDefaultBuilder(args)
               .ConfigureWebHostDefaults(webBuilder =>
               {

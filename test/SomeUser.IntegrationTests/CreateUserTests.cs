@@ -1,16 +1,21 @@
-using System.Net;
-using System.Net.Mime;
-using System.Text;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit;
-using FluentAssertions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SomeUser.Api.Models;
+// <copyright file="CreateUserTests.cs" company="Isaac Brown">
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace SomeUser.IntegrationTests
 {
+   using System.Net;
+   using System.Net.Http;
+   using System.Net.Http.Formatting;
+   using System.Net.Mime;
+   using System.Text;
+   using System.Threading.Tasks;
+   using FluentAssertions;
+   using Microsoft.AspNetCore.Mvc.Testing;
+   using Newtonsoft.Json;
+   using SomeUser.Api.Models;
+   using Xunit;
+
    /// <summary>
    /// Integration tests for creating a single user.
    /// </summary>
@@ -18,11 +23,16 @@ namespace SomeUser.IntegrationTests
    public class CreateUserTests
       : IClassFixture<WebApplicationFactory<Api.Startup>>
    {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements must be documented
+
       private readonly WebApplicationFactory<Api.Startup> factory;
+      private readonly JsonMediaTypeFormatter jsonFormatter;
 
       public CreateUserTests(WebApplicationFactory<Api.Startup> factory)
       {
          this.factory = factory;
+         this.jsonFormatter = new JsonMediaTypeFormatter();
       }
 
       [Fact]
@@ -44,7 +54,7 @@ namespace SomeUser.IntegrationTests
                "'First Name' must not be empty.",
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
-         });
+            });
       }
 
       [Fact]
@@ -56,15 +66,12 @@ namespace SomeUser.IntegrationTests
          {
             FirstName = "Alice",
             LastName = "Hall",
-            Email = "alice.hall@example.com"
+            Email = "alice.hall@example.com",
          };
-         string json = JsonConvert.SerializeObject(userToCreate);
-         using HttpContent body = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
 
          // Act.
-         var httpResponse = await client.PostAsync("users", body);
-         var responseBody = await httpResponse.Content.ReadAsStringAsync();
-         var createdUser  = JsonConvert.DeserializeObject<CreateUserResponse>(responseBody);
+         var httpResponse = await client.PostAsync("users", userToCreate, this.jsonFormatter);
+         var createdUser = await httpResponse.Content.ReadAsAsync<CreateUserResponse>();
 
          // Assert.
          httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);

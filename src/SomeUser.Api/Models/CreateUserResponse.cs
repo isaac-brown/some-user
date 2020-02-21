@@ -13,7 +13,7 @@ namespace SomeUser.Api.Models
    {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements must be documented
-      public Guid Id { get; internal set; }
+      public Guid Id { get; set; }
 
       public string FirstName { get; set; }
 

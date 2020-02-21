@@ -21,6 +21,11 @@ namespace SomeUser.Persistence.SqlServer
       private readonly SomeUserDbContext context;
       private readonly IMapper mapper;
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="UserRepository"/> class.
+      /// </summary>
+      /// <param name="context">The db context to use.</param>
+      /// <param name="mapper">The mapper to use.</param>
       public UserRepository(SomeUserDbContext context, IMapper mapper)
       {
          this.context = context;
@@ -38,7 +43,7 @@ namespace SomeUser.Persistence.SqlServer
       /// <inheritdoc/>
       public async Task<bool> ExistsAsync(Guid userId)
       {
-         return this.context.Users.Any(user => user.Id == userId);
+         return await this.context.Users.AnyAsync(user => user.Id == userId);
       }
 
       /// <inheritdoc/>
@@ -61,6 +66,7 @@ namespace SomeUser.Persistence.SqlServer
          return this.mapper.Map<User[]>(userEntities);
       }
 
+      /// <inheritdoc/>
       public async Task<bool> DeleteOneAsync(Guid userId)
       {
          if (!await this.ExistsAsync(userId))
@@ -68,7 +74,7 @@ namespace SomeUser.Persistence.SqlServer
             return false;
          }
 
-         UserEntity entity = await InternalFindOneAsync(userId);
+         UserEntity entity = await this.InternalFindOneAsync(userId);
 
          this.context.Remove<UserEntity>(entity);
 
@@ -77,16 +83,26 @@ namespace SomeUser.Persistence.SqlServer
          return true;
       }
 
-      private Task<UserEntity> InternalFindOneAsync(Guid userId)
-      {
-         return this.context.Users.Where(user => user.Id == userId).SingleAsync();
-      }
-
+      /// <inheritdoc/>
       public async Task<User> FindOneAsync(Guid userId)
       {
          UserEntity entity = await this.InternalFindOneAsync(userId);
          User user = this.mapper.Map<User>(entity);
          return user;
+      }
+
+      /// <inheritdoc/>
+      public async Task UpdateOneAsync(User user)
+      {
+         var entity = await this.InternalFindOneAsync(user.Id);
+         this.mapper.Map(user, entity);
+         this.context.Users.Update(entity);
+         await this.context.SaveChangesAsync();
+      }
+
+      private Task<UserEntity> InternalFindOneAsync(Guid userId)
+      {
+         return this.context.Users.Where(user => user.Id == userId).SingleAsync();
       }
    }
 }

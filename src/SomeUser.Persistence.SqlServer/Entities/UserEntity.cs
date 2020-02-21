@@ -6,14 +6,29 @@ namespace SomeUser.Persistence.SqlServer.Entities
 {
    using System;
 
+   /// <summary>
+   /// Represents a user entity for some application which can be persisted.
+   /// </summary>
    public class UserEntity
    {
+      /// <summary>
+      /// Gets or sets the user's unique identifier.
+      /// </summary>
       public Guid Id { get; set; }
 
+      /// <summary>
+      /// Gets or sets the first name of the user.
+      /// </summary>
       public string FirstName { get; set; }
 
+      /// <summary>
+      /// Gets or sets the last name of the user.
+      /// </summary>
       public string LastName { get; set; }
 
+      /// <summary>
+      /// Gets or sets the email address for the user.
+      /// </summary>
       public string Email { get; set; }
    }
 }

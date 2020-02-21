@@ -11,7 +11,7 @@ This project was made for the purpose of implementing an api similar to <https:/
 Clone the repository.
 
 ```bash
-git clone https://...
+git clone https://github.com/isaac-brown/some-user.git
 ```
 
 Change directory to the API project folder.

@@ -1,50 +1,57 @@
-using System.Linq;
-using System.Collections.Generic;
-using System.Net.Mime;
-using System.Text;
-using System.Net;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit;
-using Newtonsoft.Json;
-using SomeUser.Api.Models;
+// <copyright file="UpdateOneUserTests.cs" company="Isaac Brown">
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace SomeUser.IntegrationTests
 {
+   using System;
+   using System.Linq;
+   using System.Net;
+   using System.Net.Http;
+   using System.Net.Http.Formatting;
+   using System.Net.Mime;
+   using System.Text;
+   using System.Threading.Tasks;
+   using FluentAssertions;
+   using Microsoft.AspNetCore.Mvc.Testing;
+   using Newtonsoft.Json;
+   using SomeUser.Api.Models;
+   using Xunit;
+
    /// <summary>
    /// Integration tests for updating a single user.
    /// </summary>
-   public class UpdateUserTests
+   public class UpdateOneUserTests
       : IClassFixture<WebApplicationFactory<Api.Startup>>
    {
-      private readonly WebApplicationFactory<Api.Startup> factory;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements must be documented
 
-      public UpdateUserTests(WebApplicationFactory<Api.Startup> factory)
+      private readonly WebApplicationFactory<Api.Startup> factory;
+      private readonly JsonMediaTypeFormatter jsonFormatter;
+
+      public UpdateOneUserTests(WebApplicationFactory<Api.Startup> factory)
       {
          this.factory = factory;
+         this.jsonFormatter = new JsonMediaTypeFormatter();
       }
 
       [Fact]
       public async Task Given_a_user_id_which_does_not_exist_When_UpdateUser_is_called_Then_a_response_with_status_404_Not_Found_should_be_returned()
       {
          // Arrange.
-         var client = factory.CreateClient();
+         var client = this.factory.CreateClient();
          var userId = Guid.NewGuid();
 
          var userToUpdate = new UpdateUserRequest
          {
             FirstName = "Alice",
             LastName = "Hall",
-            Email = "alice.hall@exampl.com",
+            Email = "alice.hall@example.com",
          };
-         string json = JsonConvert.SerializeObject(userToUpdate);
-         using HttpContent body = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
 
          // Act.
-         var httpResponse = await client.PutAsync($"users/{userId}", body);
+         var httpResponse = await client.PutAsync($"users/{userId}", userToUpdate, this.jsonFormatter);
 
          // Assert.
          httpResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -54,13 +61,13 @@ namespace SomeUser.IntegrationTests
       public async Task Given_an_invalid_body_When_UpdateUser_is_called_Then_a_response_with_status_400_Bad_Request_should_be_returned()
       {
          // Arrange.
-         var client = factory.CreateClient();
+         var client = this.factory.CreateClient();
          var userId = Guid.NewGuid();
 
-         using HttpContent body = new StringContent("{}", Encoding.UTF8, MediaTypeNames.Application.Json);
+         var request = new UpdateUserRequest();
 
          // Act.
-         var httpResponse = await client.PutAsync($"users/{userId}", body);
+         var httpResponse = await client.PutAsync($"users/{userId}", request, this.jsonFormatter);
          var responseBody = await httpResponse.Content.ReadAsStringAsync();
 
          // Assert.
@@ -71,19 +78,26 @@ namespace SomeUser.IntegrationTests
                "'First Name' must not be empty.",
                "'Last Name' must not be empty.",
                "'Email' must not be empty.",
-         });
+            });
       }
 
       [Fact]
       public async Task Given_a_user_id_which_exists_When_UpdateUser_is_called_Then_a_response_with_status_204_No_Content_should_be_returned()
       {
          // Arrange.
-         var client = factory.CreateClient();
+         var client = this.factory.CreateClient();
 
-         var findUsersResponse = await client.GetAsync("users");
-         var users = JsonConvert.DeserializeObject<FindUserResponse[]>(await findUsersResponse.Content.ReadAsStringAsync());
+         var createUserRequest = new CreateUserRequest
+         {
+            FirstName = "Alice",
+            LastName = "Hall",
+            Email = "alice.hall@example.com",
+         };
 
-         var userId = users.First().Id;
+         var createUserResponse = await client.PostAsync("users", createUserRequest, this.jsonFormatter);
+         var user = await createUserResponse.Content.ReadAsAsync<CreateUserResponse>();
+
+         var userId = user.Id;
 
          var updatedUser = new UpdateUserRequest
          {
@@ -92,13 +106,8 @@ namespace SomeUser.IntegrationTests
             Email = "alice.hall@example.com",
          };
 
-         using HttpContent body = new StringContent(
-            JsonConvert.SerializeObject(updatedUser),
-            Encoding.UTF8,
-            MediaTypeNames.Application.Json);
-
          // Act.
-         var httpResponse = await client.PutAsync($"users/{userId}", body);
+         var httpResponse = await client.PutAsync($"users/{userId}", updatedUser, this.jsonFormatter);
 
          // Assert.
          httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
